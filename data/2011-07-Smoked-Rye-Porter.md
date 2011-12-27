@@ -1,6 +1,8 @@
 Smoked Rye Porter
 =================
 
+Brewed for the 2011 Iron Brewer competition.
+
 Grains
 ------
 
