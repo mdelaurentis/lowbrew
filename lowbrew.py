@@ -3,6 +3,7 @@
 import sys
 import re
 from itertools import takewhile 
+from collections import namedtuple
 
 class Header:
     def __init__(self, name, level):
@@ -23,7 +24,7 @@ class Weight:
     def pounds(self):
         (t, s) = self.number
 
-        if self.unit[0] in ["LB", "LBS"]:
+        if self.unit.kind in ["LB", "LBS"]:
             if t in ["INT", "FLOAT"]:
                 return float(s)
             if t == "RATIONAL":
@@ -62,23 +63,25 @@ def categorize_token(token):
 
     for (name, pat) in types:
         if pat.match(token) is not None:
-            return (name, token)
-    return ("WORD", token)
+            return Token(name, token)
+    return Token("WORD", token)
 
 def is_number(token):
-    return token[0] in ["INT", "FLOAT", "RATIONAL"]
+    return token.kind in ["INT", "FLOAT", "RATIONAL"]
 
 def is_weight_unit(token):
-    return token[0] in ["OZ", "LBS"]
+    return token.kind in ["OZ", "LBS"]
 
 def is_word(token):
-    return token[0] in ["WORD"]
+    return token.kind in ["WORD"]
 
 def is_word_or_number(token):
     return is_word(token) or is_number(token)
 
 def complement(f):
     return lambda x: not f(x)
+
+Token = namedtuple('Token', ['kind', 'text'])
 
 class Recipe:
     
@@ -114,7 +117,7 @@ class Recipe:
         f.close()
         for line in lines:
             result.extend(map(categorize_token, line[0:-1].split()))
-            result.append(("NEWLINE", "\n"))
+            result.append(Token("NEWLINE", "\n"))
         return result
     
     def _parse_weight(self, tokens):
@@ -127,8 +130,11 @@ class Recipe:
             return (Weight(weight, unit), tokens[2:])
         return (None, tokens)
         
-                    
     def _parse_grain(self, tokens):
+        """Attempts to parse a grain specification from the given
+        tokens.  Returns (grain, rest) if it can parse a grain from
+        the beginning of tokens, otherwise (None, tokens)."""
+
         (weight, tokens) = self._parse_weight(tokens)
         if weight is not None:
             name = [x for x in takewhile(is_word_or_number, tokens)]
@@ -143,8 +149,8 @@ class Recipe:
         newline = tokens[1]
         line = tokens[2]
         if (is_word(name) and
-            newline[0] == "NEWLINE" and
-            line[0] in ["H1", "H2"]):
+            newline.kind == "NEWLINE" and
+            line.kind in ["H1", "H2"]):
             return (Header(name, line), tokens[2:])
         return (None, tokens)
 
@@ -167,8 +173,6 @@ class Recipe:
 
     def __str__(self):
         res = ""
-        res += self.name
-        res += len(self.name) * "="
         res += "\n\n"
         res += "Grains\n"
         res += "------\n"
