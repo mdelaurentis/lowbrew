@@ -165,6 +165,16 @@ class Recipe:
             return (grains, rest)
         return (None, tokens)
 
+    def __str__(self):
+        res = ""
+        res += self.name
+        res += len(self.name) * "="
+        res += "\n\n"
+        res += "Grains\n"
+        res += "------\n"
+        for g in self.grains:
+            res += str(g) + "\n"
+        return res
+
 recipe = Recipe(sys.argv[1])
-for g in recipe.grains:
-    print g
+print recipe
