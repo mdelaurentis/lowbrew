@@ -7,7 +7,7 @@ Grains
 11 lbs American 2-Row Pale
 1 lb Crystal 60
 1/2 lb Chocolate Malt
-1/2 lb Roasted Barly
+1/2 lb Roasted Barley
 2 lbs Flaked Oats
 
 Hops

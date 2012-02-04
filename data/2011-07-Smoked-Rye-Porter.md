@@ -7,8 +7,8 @@ Grains
 ------
 
 11 lbs  English 2 Row Pale
- 2 lbs  Cherry Wood Smoked Rye
- 1 lb   Crystal 60
+1.75 lbs  Cherry Wood Smoked Rye
+1 lb  Crystal 60
 1/2 lb  Chocolate Malt
 
 Hops
